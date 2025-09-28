@@ -2,16 +2,39 @@
 import PlayButton from "./Header/PlayButton.astro";
 ---
 
-<header class="flex items-center min-w-full">
+<header
+  class="grid grid-cols-3 items-center min-w-full px-10 py-1 bg-gradient-to-r from-[#243c57] to-[#1E3E62]"
+>
   <!-- Navigate inside of the page sections -->
-  <nav>
-    <ul class="flex gap-4 text-orange-400 font-semibold">
-      <li>Ranking</li>
-      <li>Reglas</li>
-      <li>Modos de Juegos</li>
-      <li>Contacto</li>
+  <nav class="justify-self-start font-display">
+    <ul
+      class="flex items-center text-balance text-center gap-8 text-orange-400 text-lg cursor-pointer"
+    >
+      <li
+        class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-100 opacity-90"
+      >
+        Ranking
+      </li>
+      <li
+        class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90"
+      >
+        Reglas
+      </li>
+      <li
+        class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90"
+      >
+        Modos de Juego
+      </li>
+      <li
+        class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90"
+      >
+        Contacto
+      </li>
     </ul>
   </nav>
 
   <PlayButton />
+
+  <!-- Empty div to balance the layout -->
+  <div></div>
 </header>

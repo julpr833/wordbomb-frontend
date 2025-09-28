@@ -1,0 +1,30 @@
+---
+interface Props {
+  class?: string;
+  fill?: string;
+  width?: number;
+  height?: number;
+}
+
+const {
+  class: className = "",
+  fill: fillColor = "oklch(0.2 0.02 0)",
+  width = 24,
+  height = 24,
+} = Astro.props;
+
+const finalHeight = height || width;
+---
+
+<svg
+  class={className}
+  width={width}
+  height={finalHeight}
+  viewBox="0 0 128 148"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M64 1 17.9 127 64 99.8l46.1 27.2L64 1zm0 20.4 32.6 89.2L64 91.3V21.4z"
+    fill={fillColor}></path>
+</svg>

@@ -1,6 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Jersey+15&display=swap");
+
+/* ------------------------------- */
+
 @import "tailwindcss";
 
 /* ------------------------------- */
+
+@theme {
+  --font-display: "Jersey 15", system-ui;
+}
 
 :root {
   --background-start: oklch(21.197% 0.04265 256.477);
@@ -17,4 +25,25 @@ html {
   );
   background-repeat: no-repeat;
   background-attachment: fixed;
+}
+
+@keyframes spinbounce {
+  0% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(30deg);
+  }
+  40% {
+    transform: rotate(120deg);
+  }
+  60% {
+    transform: rotate(210deg);
+  }
+  80% {
+    transform: rotate(300deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
