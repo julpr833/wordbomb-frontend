@@ -1,14 +1,18 @@
 ---
 import Arrow from "./Main/Arrow.astro";
 import Bomb from "./Main/Bomb.astro";
+import Card from "./Main/Card.astro";
 import Explosion from "./Main/Explosion.astro";
-import Wave from "./Main/Wave.astro";
+
+import gamepadSvg from "./Main/assets/gamepad.svg";
+import keyboardSvg from "./Main/assets/keyboard.svg";
+import trophySvg from "./Main/assets/trophy.svg";
 ---
 
 <main>
   <section
     id="hero"
-    class="flex relative flex-col items-center justify-center lg:min-h-[75dvh]"
+    class="flex relative flex-col items-center justify-center lg:min-h-[75dvh] mb-4"
   >
     <hgroup
       class="flex items-center flex-col text-center my-12 text-white font-display text-shadow-sm text-shadow-orange-800"
@@ -16,7 +20,9 @@ import Wave from "./Main/Wave.astro";
       <h1 class="lg:text-6xl tracking-wider font-extrabold">Wordbomb</h1>
       <h2 class="lg:text-4xl py-2 opacity-90">
         Piensa rápido, escribe aún más rápido...
-        <span>o explota!</span>
+        <span class="text-shadow-md text-shadow-yellow-700 text-orange-100"
+          >o explota!</span
+        >
       </h2>
     </hgroup>
     <Bomb
@@ -28,7 +34,7 @@ import Wave from "./Main/Wave.astro";
       fuse="oklch(30.26% 0.1203 52.1)"
     />
     <Arrow
-      class="absolute -z-20 animate-[spinbounce_6s_cubic-bezier(0.68,-0.55,0.265,1.55)_infinite]"
+      class="absolute -z-20 motion-safe:animate-[spinbounce_6s_cubic-bezier(0.68,-0.55,0.265,1.55)_infinite]"
       fill="oklch(58.91% 0.2300 28.2)"
       width={300}
       height={360}
@@ -41,5 +47,34 @@ import Wave from "./Main/Wave.astro";
     <Explosion
       class="absolute opacity-20 -z-10 right-100 bottom-0 rotate-[20deg]"
     />
+    <Explosion class="absolute -z-10 scrollanim-explode motion-reduce:hidden" />
+  </section>
+  <section
+    id="how-to-play"
+    class="relative box-content flex flex-col items-center"
+  >
+    <Explosion
+      class="absolute opacity-50 -z-10 scale-180"
+      outerColor="#BA421A"
+      innerColor="#8E1E18"
+    />
+    <h2
+      class="lg:text-5xl tracking-wide font-extrabold font-display text-white text-shadow-sm opacity-80 text-shadow-yellow-800 rotate-3"
+    >
+      Cómo jugar
+    </h2>
+    <div class="flex flex-row items-center justify-center gap-6 my-8 pb-12">
+      <Card icon={gamepadSvg} iconAlt="Gamepad" class="-rotate-8" emoji="🎮">
+        <p class="opacity-90">Crea o unete a una sala</p>
+      </Card>
+      <Card icon={keyboardSvg} iconAlt="Keyboard" emoji="⌨️">
+        <p class="opacity-90">
+          Escribe rápido una palabra con la sílaba que te toca
+        </p>
+      </Card>
+      <Card icon={trophySvg} iconAlt="Trophy" class="rotate-4" emoji="🏆">
+        <p class="opacity-90">El último en pie gana. ¡No explotes! 💣</p>
+      </Card>
+    </div>
   </section>
 </main>
