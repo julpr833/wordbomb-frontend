@@ -9,9 +9,16 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/svelte": "^7.2.0",
     "@tailwindcss/vite": "^4.1.13",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
     "astro": "^5.13.5",
-    "tailwindcss": "^4.1.13"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "svelte": "^5.39.9",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "prettier": "3.6.2",

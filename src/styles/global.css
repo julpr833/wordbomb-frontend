@@ -6,6 +6,7 @@
 
 @theme {
   --font-display: "Jersey 15", system-ui;
+  --font-display-header: "Jersey 25", system-ui;
 }
 
 :root {
@@ -23,6 +24,7 @@ html {
   );
   background-repeat: no-repeat;
   background-attachment: fixed;
+  scroll-behavior: smooth;
 }
 
 @keyframes spinbounce {
