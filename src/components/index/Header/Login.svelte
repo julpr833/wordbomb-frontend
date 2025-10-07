@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { slide } from "svelte/transition";
+  import { blur, fade } from "svelte/transition";
 
   const TABS = {
     LOGIN: 0,
@@ -40,7 +40,7 @@
   bind:this={authDialog}
   on:close={handleModalClose}
   closedby="any"
-  class="fixed m-auto backdrop:bg-blue-950/50 bg-transparent shadow-[2px_2px_10px_rgba(0,0,0,0.35)] min-w-1/4 opacity-0 transition-opacity duration-300 ease-in-out"
+  class="fixed m-auto backdrop:bg-blue-950/50 backdrop:backdrop-blur-xs bg-gradient-to-br from-[#0B192C] via-[#11243d] to-[#0B192C] shadow-[2px_2px_10px_rgba(0,0,0,0.35)] min-w-1/4 opacity-0 transition-opacity duration-300 ease-in-out"
 >
   <div
     id="tab-changer"
@@ -64,8 +64,9 @@
     <form
       method="POST"
       action="/api/auth/login"
-      class="p-4 bg-gradient-to-br from-[#0B192C] via-[#11243d] to-[#0B192C] flex justify-center min-w-full content-box rounded-b-md"
-      transition:slide
+      class="p-4 bg-gradient-to-br flex justify-center min-w-full content-box rounded-b-md"
+      in:blur
+      out:fade={{ duration: 0 }}
     >
       <fieldset
         class="min-w-10/12 flex flex-col gap-2 items-center text-center text-white"
@@ -115,8 +116,9 @@
     <form
       method="POST"
       action="/api/auth/login"
-      class="p-4 bg-gradient-to-br from-[#0B192C] via-[#11243d] to-[#0B192C] flex justify-center min-w-full content-box rounded-b-md"
-      transition:slide
+      class="p-4 flex justify-center min-w-full content-box rounded-b-md"
+      in:blur
+      out:fade={{ duration: 0 }}
     >
       <fieldset
         class="min-w-10/12 flex flex-col gap-2 items-center text-center text-white"
@@ -135,7 +137,7 @@
             type="text"
             name="username"
             id="username"
-            placeholder="Usuario"
+            placeholder="Ingresa tu usuario..."
             class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
             required
           />
@@ -150,7 +152,7 @@
             type="email"
             name="email"
             id="email"
-            placeholder="Correo electrónico"
+            placeholder="Ingresa tu correo electrónico"
             class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
             required
           />
@@ -180,7 +182,7 @@
             type="password"
             name="password-confirmation"
             id="password-confirmation"
-            placeholder="Confirmar contraseña"
+            placeholder="Confirma tu contraseña..."
             class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
             required
           />
