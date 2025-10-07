@@ -51,7 +51,7 @@ html {
 .scrollanim-explode {
   animation: explosion linear both;
   animation-timeline: scroll();
-  animation-range: entry 25% entry 150%;
+  animation-range: entry 5% entry 75%;
 }
 
 @keyframes explosion {

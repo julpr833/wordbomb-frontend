@@ -3,10 +3,6 @@ import Arrow from "./Main/Arrow.astro";
 import Bomb from "./Main/Bomb.astro";
 import Card from "./Main/Card.astro";
 import Explosion from "./Main/Explosion.astro";
-
-import gamepadSvg from "./Main/assets/gamepad.svg";
-import keyboardSvg from "./Main/assets/keyboard.svg";
-import trophySvg from "./Main/assets/trophy.svg";
 ---
 
 <main>
@@ -64,17 +60,78 @@ import trophySvg from "./Main/assets/trophy.svg";
       Cómo jugar
     </h2>
     <div class="flex flex-row items-center justify-center gap-6 my-8 pb-12">
-      <Card icon={gamepadSvg} iconAlt="Gamepad" class="-rotate-8" emoji="🎮">
+      <Card class="-rotate-8" emoji="🎮">
         <p class="opacity-90">Crea o unete a una sala</p>
       </Card>
-      <Card icon={keyboardSvg} iconAlt="Keyboard" emoji="⌨️">
+      <Card emoji="⌨️">
         <p class="opacity-90">
           Escribe rápido una palabra con la sílaba que te toca
         </p>
       </Card>
-      <Card icon={trophySvg} iconAlt="Trophy" class="rotate-4" emoji="🏆">
+      <Card class="rotate-4" emoji="🏆">
         <p class="opacity-90">El último en pie gana. ¡No explotes! 💣</p>
       </Card>
     </div>
+  </section>
+
+  <section
+    id="gamemodes"
+    class="relative box-content flex flex-col items-center"
+  >
+    <Explosion
+      class="absolute opacity-50 -z-10 scale-180"
+      strokeColor="#4792CB"
+      outerColor="#4792CB"
+      innerColor="#222222"
+    />
+    <h2
+      class="lg:text-5xl tracking-wide font-extrabold font-display text-white text-shadow-sm opacity-80 text-shadow-yellow-800 -rotate-3"
+    >
+      Modos de juego
+    </h2>
+    <div class="flex flex-row items-center justify-center gap-6 my-8 pb-12">
+      <Card
+        animate={false}
+        class="rotate-8"
+        emoji="🤔"
+        fromColor="oklch(32.43% 0.0831 240.8)"
+        toColor="oklch(42.43% 0.0831 240.8)"
+        borderColor="oklch(62.43% 0.0831 240.8)"
+      >
+        <h3 class="text-cyan-200 font-extrabold">Clásico</h3>
+        <p class="opacity-90">¡Piensa rápido!</p>
+      </Card>
+      <Card
+        animate={false}
+        emoji="⏮️"
+        fromColor="oklch(42.43% 0.0831 240.8)"
+        toColor="oklch(32.43% 0.0831 240.8)"
+        borderColor="oklch(62.43% 0.0831 240.8)"
+      >
+        <h3 class="text-cyan-200 font-extrabold">Volteado</h3>
+        <p class="opacity-90">¡Escribe la palabra que toque al revés!</p>
+      </Card>
+      <Card
+        animate={false}
+        class="-rotate-4"
+        emoji="☠️"
+        fromColor="oklch(32.43% 0.0831 240.8)"
+        toColor="oklch(42.43% 0.0831 240.8)"
+        borderColor="oklch(62.43% 0.0831 240.8)"
+      >
+        <h3 class="text-cyan-200 font-extrabold">Hardcore</h3>
+        <p class="opacity-90">Fallar = Morir</p>
+      </Card>
+    </div>
+  </section>
+  <section
+    id="gamemodes"
+    class="relative box-content flex flex-col items-center"
+  >
+    <h2
+      class="lg:text-5xl tracking-wide font-extrabold font-display text-white text-shadow-sm opacity-80 text-shadow-yellow-800 mb-4"
+    >
+      RANKING
+    </h2>
   </section>
 </main>
