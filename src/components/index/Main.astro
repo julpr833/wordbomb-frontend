@@ -3,6 +3,8 @@ import Arrow from "./Main/Arrow.astro";
 import Bomb from "./Main/Bomb.astro";
 import Card from "./Main/Card.astro";
 import Explosion from "./Main/Explosion.astro";
+import Ranking from "./Main/Ranking/Ranking.astro";
+import RankingItem from "./Main/Ranking/RankingItem.astro";
 ---
 
 <main>
@@ -124,14 +126,47 @@ import Explosion from "./Main/Explosion.astro";
       </Card>
     </div>
   </section>
-  <section
-    id="gamemodes"
-    class="relative box-content flex flex-col items-center"
-  >
+  <section id="ranking" class="relative box-content flex flex-col items-center">
     <h2
-      class="lg:text-5xl tracking-wide font-extrabold font-display text-white text-shadow-sm opacity-80 text-shadow-yellow-800 mb-4"
+      class="lg:text-5xl tracking-wide font-extrabold font-display text-white text-shadow-sm opacity-80 text-shadow-yellow-800 mb-4 drop-shadow-lg drop-shadow-orange-600"
     >
       RANKING
     </h2>
+    <Ranking>
+      <RankingItem username="Ejemplo" elo={3000} />
+      <RankingItem username="Ejemplo" elo={2000} />
+      <RankingItem username="Ejemplo" elo={1000} />
+      <RankingItem username="Ejemplo" elo={800} />
+      <RankingItem username="Ejemplo" elo={700} />
+      <RankingItem username="Ejemplo" elo={600} />
+      <RankingItem username="Ejemplo" elo={500} />
+      <a
+        href="/ranking"
+        class="flex justify-center align-middle items-center self-center text-black/80 bg-yellow-200 text-lg w-fit px-2 py-0.5 rounded-md outline-black/80 outline-3 before:content-['▼'] before:mr-1 before:text-[#212121]/90 duration-200 hover:scale-105 hover:bg-amber-100"
+        >Ver ranking completo</a
+      >
+    </Ranking>
+  </section>
+  <section
+    id="footer"
+    class="flex w-full h-24 items-center justify-between text-white bg-blue-950/40 shadow-[0_-5px_10px_rgba(0,0,0,0.1)] [&>div]:nth-[2]:border-r-2 [&>div]:nth-[2]:border-l-2 [&>div]:nth-[2]:border-white/20"
+  >
+    <div class="flex flex-1 h-full justify-center font-mono items-center">
+      <p>&copy; {new Date().getFullYear()} Call of Code</p>
+    </div>
+    <div
+      class="flex flex-1 h-full justify-center font-bold font-mono items-center text-cyan-200 hover:text-cyan-400"
+    >
+      <address>
+        <a href="mailto:contact@callofcode.com">contact@callofcode.com</a>
+      </address>
+    </div>
+    <div
+      class="flex flex-1 h-full justify-center font-semibold font-mono items-center text-cyan-200 hover:text-cyan-400"
+    >
+      <a href="https://isam.educacionadventista.com/"
+        >Técnico Superior Analista en Sistemas</a
+      >
+    </div>
   </section>
 </main>

@@ -10,8 +10,8 @@
 }
 
 :root {
-  --background-start: oklch(21.197% 0.04265 256.477);
-  --background-middle: oklch(28.197% 0.04265 256.477);
+  --background-start: oklch(31.197% 0.04265 256.477);
+  --background-middle: oklch(20.197% 0.04265 256.477);
   --background-end: oklch(25.833% 0.07346 252.938);
 }
 
@@ -140,4 +140,47 @@ html {
     transform: translateX(0) rotate(0) scale(1);
     background: oklch(37.852% 0.11218 38.291);
   }
+}
+
+.ranking > li:nth-child(1) > :is(div, span) {
+  color: oklch(84.386% 0.16673 105.314);
+}
+
+.ranking > li:nth-child(2) > :is(div, span) {
+  color: oklch(76.284% 0.00339 15.825);
+}
+
+.ranking > li:nth-child(3) > :is(div, span) {
+  color: oklch(81.804% 0.09603 96.802);
+}
+
+.ranking > li:nth-child(1) {
+  outline: 2px solid yellow;
+  outline-offset: 1.5px;
+}
+
+.ranking > li:nth-child(2) {
+  outline: 2px solid silver;
+  outline-offset: 1.5px;
+}
+
+.ranking > li:nth-child(3) {
+  outline: 2px solid #cd7f32;
+  outline-offset: 1.5px;
+}
+
+.ranking > li:nth-child(1) > div > span:first-of-type::before {
+  content: "🥇";
+}
+
+.ranking > li:nth-child(2) > div > span:first-of-type::before {
+  content: "🥈";
+}
+
+.ranking > li:nth-child(3) > div > span:first-of-type::before {
+  content: "🥉";
+}
+
+.ranking > li:nth-child(n + 4) {
+  opacity: 0.5;
 }
