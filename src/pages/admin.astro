@@ -1,0 +1,86 @@
+---
+import AdminLayout from "../layouts/AdminLayout.astro";
+import Sidebar from "../components/admin/Sidebar.astro";
+import GamePanel from "../components/admin/GamePanel.astro";
+import PlayerPanel from "../components/admin/PlayerPanel.astro";
+
+// Obtener el parámetro de la URL para determinar qué pestaña mostrar
+const url = new URL(Astro.request.url);
+const tab = url.searchParams.get('tab') || 'game';
+---
+
+<AdminLayout title="WordBomb Admin" description="Panel de administración de WordBomb">
+  <!-- Menú móvil -->
+  <div class="lg:hidden bg-slate-800 p-4">
+    <div class="flex items-center justify-between">
+      <h1 class="text-white text-xl font-bold font-display">WordBomb Admin</h1>
+      <button id="mobile-menu-btn" class="text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Menú móvil desplegable -->
+    <div id="mobile-menu" class="hidden mt-4 space-y-2">
+      <a 
+        href="/admin?tab=game" 
+        class={`block px-4 py-3 rounded-lg text-white transition-colors duration-200 ${
+          tab === 'game' ? 'bg-slate-700' : 'hover:bg-slate-700'
+        }`}
+      >
+        Panel de Juego
+      </a>
+      <a 
+        href="/admin?tab=player" 
+        class={`block px-4 py-3 rounded-lg text-white transition-colors duration-200 ${
+          tab === 'player' ? 'bg-slate-700' : 'hover:bg-slate-700'
+        }`}
+      >
+        Panel de Jugador
+      </a>
+      <a 
+        href="/admin?tab=config" 
+        class={`block px-4 py-3 rounded-lg text-white transition-colors duration-200 ${
+          tab === 'config' ? 'bg-slate-700' : 'hover:bg-slate-700'
+        }`}
+      >
+        Configuración
+      </a>
+      <a 
+        href="/" 
+        class="block px-4 py-3 rounded-lg text-white transition-colors duration-200 hover:bg-slate-700"
+      >
+        Cerrar Sesión
+      </a>
+    </div>
+  </div>
+
+  <div class="flex min-h-screen">
+    <Sidebar activeTab={tab} />
+    
+    {tab === 'game' && <GamePanel />}
+    {tab === 'player' && <PlayerPanel />}
+    {tab === 'config' && (
+      <div class="w-full lg:w-3/4 bg-slate-700 min-h-screen p-4 lg:p-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h2 class="text-3xl font-bold text-slate-800 mb-8 font-display">Configuración</h2>
+          <p class="text-slate-600 font-display">Panel de configuración en desarrollo...</p>
+        </div>
+      </div>
+    )}
+  </div>
+
+  <script>
+    // Toggle mobile menu
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      if (menu) {
+        menu.classList.toggle('hidden');
+      }
+    });
+  </script>
+</AdminLayout>
+
+
+

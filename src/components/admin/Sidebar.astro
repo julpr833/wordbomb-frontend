@@ -1,0 +1,67 @@
+---
+export interface Props {
+  activeTab?: string;
+}
+
+const { activeTab = "game" } = Astro.props;
+---
+
+<aside class="w-1/4 bg-slate-800 min-h-screen p-6 lg:block hidden">
+  <div class="mb-8">
+    <h1 class="text-white text-2xl font-bold font-display">WordBomb Admin</h1>
+  </div>
+  
+  <nav class="space-y-2">
+    <a 
+      href="/admin?tab=game" 
+      class={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-white transition-colors duration-200 ${
+        activeTab === 'game' 
+          ? 'bg-slate-700 border-l-4 border-orange-400' 
+          : 'hover:bg-slate-700'
+      }`}
+    >
+      <span class="font-display">Panel de Juego</span>
+      {activeTab === 'game' && (
+        <span class="text-white">◀</span>
+      )}
+    </a>
+    
+    <a 
+      href="/admin?tab=player" 
+      class={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-white transition-colors duration-200 ${
+        activeTab === 'player' 
+          ? 'bg-slate-700 border-l-4 border-orange-400' 
+          : 'hover:bg-slate-700'
+      }`}
+    >
+      <span class="font-display">Panel de Jugador</span>
+      {activeTab === 'player' && (
+        <span class="text-white">◀</span>
+      )}
+    </a>
+    
+    <a 
+      href="/admin?tab=config" 
+      class={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-white transition-colors duration-200 ${
+        activeTab === 'config' 
+          ? 'bg-slate-700 border-l-4 border-orange-400' 
+          : 'hover:bg-slate-700'
+      }`}
+    >
+      <span class="font-display">Configuración</span>
+      {activeTab === 'config' && (
+        <span class="text-white">◀</span>
+      )}
+    </a>
+    
+    <a 
+      href="/" 
+      class="flex items-center justify-between w-full px-4 py-3 rounded-lg text-white transition-colors duration-200 hover:bg-slate-700"
+    >
+      <span class="font-display">Cerrar Sesión</span>
+    </a>
+  </nav>
+</aside>
+
+
+

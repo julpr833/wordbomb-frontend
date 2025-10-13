@@ -1,0 +1,115 @@
+---
+// Datos de ejemplo para los jugadores
+const players = [
+  { id: 1, username: "Ana", score: 1200, matches: 35, status: "ACTIVO" },
+  { id: 2, username: "Carlos", score: 980, matches: 28, status: "ACTIVO" },
+  { id: 3, username: "María", score: 750, matches: 22, status: "INACTIVO" },
+  { id: 4, username: "Luis", score: 1500, matches: 42, status: "ACTIVO" },
+  { id: 5, username: "Sofia", score: 650, matches: 18, status: "ACTIVO" }
+];
+---
+
+<div class="w-full lg:w-3/4 bg-slate-700 min-h-screen p-4 lg:p-8">
+  <div class="bg-white rounded-lg shadow-lg p-8">
+    <h2 class="text-3xl font-bold text-white mb-8 font-display">Panel de Jugador</h2>
+    
+    <!-- Barra de búsqueda y filtros -->
+    <div class="mb-6 flex flex-col lg:flex-row gap-4">
+      <div class="flex-1 relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input 
+          type="text" 
+          placeholder="Buscar Jugador" 
+          class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+        />
+      </div>
+      
+      <div class="relative">
+        <select class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-3 pr-8 focus:ring-2 focus:ring-orange-400 focus:border-transparent w-full lg:w-auto">
+          <option>Estado: Activo</option>
+          <option>Estado: Inactivo</option>
+          <option>Estado: Todos</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Opciones de ordenamiento -->
+    <div class="mb-6">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-6 text-white font-display">
+        <span class="text-lg">Ordenar por:</span>
+        <div class="flex flex-wrap gap-2">
+          <button class="px-4 py-2 bg-slate-600 rounded-lg hover:bg-slate-500 transition-colors duration-200 text-sm lg:text-base">Puntos</button>
+          <button class="px-4 py-2 bg-slate-600 rounded-lg hover:bg-slate-500 transition-colors duration-200 text-sm lg:text-base">Partidas</button>
+          <button class="px-4 py-2 bg-slate-600 rounded-lg hover:bg-slate-500 transition-colors duration-200 text-sm lg:text-base">Fecha de registro</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tabla de jugadores -->
+    <div class="bg-white rounded-lg p-6">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b-2 border-gray-200">
+              <th class="text-left py-4 px-4 font-semibold text-slate-800 font-display">Usuario</th>
+              <th class="text-left py-4 px-4 font-semibold text-slate-800 font-display">Puntaje</th>
+              <th class="text-left py-4 px-4 font-semibold text-slate-800 font-display">Partidas</th>
+              <th class="text-left py-4 px-4 font-semibold text-slate-800 font-display">Estado</th>
+              <th class="text-left py-4 px-4 font-semibold text-slate-800 font-display">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {players.map((player) => (
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-4 px-4 text-slate-700 font-display">{player.username}</td>
+                <td class="py-4 px-4 text-slate-700 font-display">{player.score}</td>
+                <td class="py-4 px-4 text-slate-700 font-display">{player.matches}</td>
+                <td class="py-4 px-4">
+                  <span class={`px-3 py-1 rounded-full text-sm font-display ${
+                    player.status === 'ACTIVO' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {player.status}
+                  </span>
+                </td>
+                <td class="py-4 px-4">
+                  <div class="flex gap-2">
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-display text-sm">
+                      Editar
+                    </button>
+                    <button class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors duration-200 font-display text-sm">
+                      Banear
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Botón para agregar jugador -->
+    <div class="flex justify-center mt-6">
+      <button class="flex items-center gap-3 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200 font-display">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span class="text-lg">+ Agregar Jugador</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+

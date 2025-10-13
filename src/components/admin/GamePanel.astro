@@ -1,0 +1,81 @@
+---
+// Datos de ejemplo para las palabras
+const words = [
+  { id: 1, word: "Goma" },
+  { id: 2, word: "Dar" },
+  { id: 3, word: "Sostenido" },
+  { id: 4, word: "Casa" },
+  { id: 5, word: "Perro" },
+  { id: 6, word: "Libro" },
+  { id: 7, word: "Mesa" },
+  { id: 8, word: "Silla" }
+];
+---
+
+<div class="w-full lg:w-3/4 bg-slate-700 min-h-screen p-4 lg:p-8">
+  <div class="bg-white rounded-lg shadow-lg p-8">
+    <h2 class="text-3xl font-bold text-slate-800 mb-8 font-display">Panel de Juego</h2>
+    
+    <!-- Barra de búsqueda -->
+    <div class="mb-6">
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input 
+          type="text" 
+          placeholder="Buscar Palabra" 
+          class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+        />
+      </div>
+    </div>
+    
+    <!-- Tabla de palabras -->
+    <div class="mb-6">
+      <h3 class="text-xl font-semibold text-slate-800 mb-4 font-display">Palabras</h3>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b-2 border-gray-200">
+              <th class="text-left py-4 px-4 font-semibold text-slate-800 font-display">Palabras</th>
+              <th class="text-left py-4 px-4 font-semibold text-slate-800 font-display">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {words.map((word) => (
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-4 px-4 text-slate-700 font-display">{word.word}</td>
+                <td class="py-4 px-4">
+                  <div class="flex gap-2">
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-display text-sm">
+                      Editar
+                    </button>
+                    <button class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors duration-200 font-display text-sm">
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Botón para agregar palabra -->
+    <div class="flex justify-center">
+      <button class="flex items-center gap-3 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200 font-display">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span class="text-lg">+ Agregar Palabra</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
