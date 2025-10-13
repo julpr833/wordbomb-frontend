@@ -9,6 +9,10 @@
   --font-display-header: "Jersey 25", system-ui;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
 :root {
   --background-start: oklch(31.197% 0.04265 256.477);
   --background-middle: oklch(20.197% 0.04265 256.477);
