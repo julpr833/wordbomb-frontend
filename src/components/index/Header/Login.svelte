@@ -32,7 +32,7 @@
 
 <button
   on:click={handleModalOpen}
-  class="justify-self-end text-white bg-orange-400 py-1.5 px-3 rounded-sm font-display text-xl hover:bg-orange-300 transition-colors duration-200 shadow-sm shadow-blue-950 inset-shadow-sm inset-shadow-orange-200 cursor-pointer"
+  class="justify-self-end text-white bg-orange-800 py-1.5 px-3 rounded-sm font-display text-xl hover:bg-orange-600 transition-colors duration-200 shadow-sm shadow-blue-950 inset-shadow-sm inset-shadow-orange-200 cursor-pointer"
   >Ingresar</button
 >
 
