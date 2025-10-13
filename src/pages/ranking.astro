@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Components
+import Header from "../components/index/Header.astro";
+import Footer from "../components/index/Footer.astro";
+import Ranking from "../components/index/Main/Ranking/Ranking.astro";
+import RankingItem from "../components/index/Main/Ranking/RankingItem.astro";
+---
+
+<BaseLayout title="Wordbomb" description="Index">
+  <Header showReturn={true} />
+  <section class="flex w-full items-center justify-center">
+    <Ranking>
+      <!-- Traer todos los usuarios del ranking -->
+      <!-- Hacer un botoncito de ver más... -->
+    </Ranking>
+  </section>
+  <Footer />
+</BaseLayout>
