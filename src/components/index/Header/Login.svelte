@@ -33,11 +33,30 @@
   }
 </script>
 
-<button
-  on:click={handleModalOpen}
-  class="justify-self-end text-white bg-orange-800 py-1.5 px-3 rounded-sm font-display text-xl hover:bg-orange-600 transition-colors duration-200 shadow-sm shadow-blue-950 inset-shadow-sm inset-shadow-orange-200 cursor-pointer"
-  >Ingresar</button
->
+<!-- TODO: Implementar lógica de autenticación real -->
+{#if false}
+  <!-- Usuario logueado - mostrar perfil -->
+  <div class="justify-self-end flex items-center space-x-4">
+    <a 
+      href="/profile"
+      class="text-white bg-orange-400 py-1.5 px-3 rounded-sm font-display text-xl hover:bg-orange-500 transition-colors duration-200 shadow-sm shadow-blue-950"
+    >
+      Mi Perfil
+    </a>
+    <button
+      class="text-white bg-gray-600 py-1.5 px-3 rounded-sm font-display text-lg hover:bg-gray-700 transition-colors duration-200"
+    >
+      Cerrar Sesión
+    </button>
+  </div>
+{:else}
+  <!-- Usuario no logueado - mostrar botón de ingresar -->
+  <button
+    on:click={handleModalOpen}
+    class="justify-self-end text-white bg-orange-800 py-1.5 px-3 rounded-sm font-display text-xl hover:bg-orange-600 transition-colors duration-200 shadow-sm shadow-blue-950 inset-shadow-sm inset-shadow-orange-200 cursor-pointer"
+    >Ingresar</button
+  >
+{/if}
 
 <dialog
   bind:this={authDialog}

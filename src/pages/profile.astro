@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/index/Header.astro";
+import Footer from "../components/index/Footer.astro";
+import ProfileStats from "../components/profile/ProfileStats.astro";
+import ProfileGraphs from "../components/profile/ProfileGraphs.astro";
+import ProfileForm from "../components/profile/ProfileForm.astro";
+---
+
+<BaseLayout title="Mi Perfil - Wordbomb" description="Página de perfil del usuario">
+  <Header showReturn={true} />
+  
+  <main class="min-h-screen bg-gradient-to-br from-[#1E3E62] via-[#243c57] to-[#1E3E62] px-6 py-8">
+    <div class="max-w-7xl mx-auto">
+      <!-- Título principal -->
+      <div class="mb-8">
+        <h1 class="text-5xl font-bold text-orange-400 font-display mb-4">Mi Perfil</h1>
+        <a 
+          href="/" 
+          class="inline-block bg-orange-400 text-white px-4 py-2 rounded-lg font-display text-lg hover:bg-orange-500 transition-colors duration-200"
+        >
+          ← Volver
+        </a>
+      </div>
+
+      <!-- Contenido principal -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Columna izquierda - Estadísticas -->
+        <div class="lg:col-span-1">
+          <ProfileStats />
+        </div>
+
+        <!-- Columna central - Gráficos -->
+        <div class="lg:col-span-1">
+          <ProfileGraphs />
+        </div>
+
+        <!-- Columna derecha - Formulario de perfil -->
+        <div class="lg:col-span-1">
+          <ProfileForm />
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
