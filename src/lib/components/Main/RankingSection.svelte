@@ -1,0 +1,24 @@
+<script lang="ts">
+	import Ranking from './Ranking/Ranking.svelte';
+	import RankingItem from './Ranking/RankingItem.svelte';
+</script>
+
+<section id="ranking" class="relative box-content flex flex-col items-center">
+	<h2 class="lg:text-5xl tracking-wide font-extrabold font-display text-white text-shadow-sm opacity-80 text-shadow-yellow-800 mb-4 drop-shadow-lg drop-shadow-orange-600">
+		RANKING
+	</h2>
+	<Ranking>
+		<RankingItem username="Ejemplo" elo={3000} />
+		<RankingItem username="Ejemplo" elo={2000} />
+		<RankingItem username="Ejemplo" elo={1000} />
+		<RankingItem username="Ejemplo" elo={800} />
+		<RankingItem username="Ejemplo" elo={700} />
+		<RankingItem username="Ejemplo" elo={600} />
+		<RankingItem username="Ejemplo" elo={500} />
+	</Ranking>
+	<a
+		href="/ranking"
+		class="flex justify-center align-middle items-center self-center mb-8 font-display-header text-black/80 bg-yellow-200 text-lg w-fit px-2 py-0.5 rounded-md outline-black/80 outline-3 before:content-['▼'] before:mr-1 before:text-[#212121]/90 duration-200 hover:scale-105 hover:bg-amber-100"
+		>Ver ranking completo</a
+	>
+</section>

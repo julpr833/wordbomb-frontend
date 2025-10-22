@@ -1,0 +1,50 @@
+<script lang="ts">
+	import Card from './Card.svelte';
+	import Explosion from './Explosion.svelte';
+</script>
+
+<section id="gamemodes" class="relative box-content pt-24 flex flex-col items-center">
+	<Explosion
+		class="absolute opacity-50 -z-10 scale-180"
+		strokeColor="#4792CB"
+		outerColor="#4792CB"
+		innerColor="#222222"
+	/>
+	<h2 class="lg:text-5xl tracking-wide font-extrabold font-display text-white text-shadow-sm opacity-80 text-shadow-yellow-800 -rotate-3">
+		Modos de juego
+	</h2>
+	<div class="flex flex-row items-center justify-center gap-6 my-8 pb-12">
+		<Card
+			animate={false}
+			class="rotate-8"
+			emoji="🤔"
+			fromColor="oklch(32.43% 0.0831 240.8)"
+			toColor="oklch(42.43% 0.0831 240.8)"
+			borderColor="oklch(62.43% 0.0831 240.8)"
+		>
+			<h3 class="text-cyan-200 font-extrabold">Clásico</h3>
+			<p class="opacity-90">¡Piensa rápido!</p>
+		</Card>
+		<Card
+			animate={false}
+			emoji="⏮️"
+			fromColor="oklch(42.43% 0.0831 240.8)"
+			toColor="oklch(32.43% 0.0831 240.8)"
+			borderColor="oklch(62.43% 0.0831 240.8)"
+		>
+			<h3 class="text-cyan-200 font-extrabold">Volteado</h3>
+			<p class="opacity-90">¡Escribe la palabra que toque al revés!</p>
+		</Card>
+		<Card
+			animate={false}
+			class="-rotate-4"
+			emoji="☠️"
+			fromColor="oklch(32.43% 0.0831 240.8)"
+			toColor="oklch(42.43% 0.0831 240.8)"
+			borderColor="oklch(62.43% 0.0831 240.8)"
+		>
+			<h3 class="text-cyan-200 font-extrabold">Muerte súbita</h3>
+			<p class="opacity-90">¡Solo una vida!</p>
+		</Card>
+	</div>
+</section>

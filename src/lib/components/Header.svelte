@@ -1,0 +1,44 @@
+<script lang="ts">
+	import { authStore } from '$lib/stores/auth.js';
+	import Login from '$lib/components/Header/Login.svelte';
+	import PlayButton from '$lib/components/Header/PlayButton.svelte';
+	import { page } from '$app/stores';
+
+	export let showReturn = false;
+
+	$: isAuthenticated = $authStore.isAuthenticated;
+</script>
+
+<header class="grid grid-cols-3 items-center min-w-full px-10 py-1 bg-gradient-to-r from-[#243c57] to-[#1E3E62]">
+	<!-- Navegación dentro de las secciones de la página -->
+	<nav class="justify-self-start font-display">
+		{#if !showReturn}
+			<ul class="flex items-center text-balance text-center gap-8 text-orange-400 text-lg cursor-pointer">
+				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-100 opacity-90">
+					<a href="#ranking">Ranking</a>
+				</li>
+				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90">
+					<a href="#how-to-play">Reglas</a>
+				</li>
+				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90">
+					<a href="#gamemodes">Modos de Juego</a>
+				</li>
+				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90">
+					<a href="#footer">Contacto</a>
+				</li>
+			</ul>
+		{:else}
+			<a
+				class="justify-self-end text-white py-2 px-2 rounded-xs font-display text-xl transition-colors duration-200 shadow-sm shadow-blue-950 inset-shadow-sm inset-shadow-orange-200 cursor-pointer before:content-['<'] before:text-2xl hover:animate-pulse bg-cyan-800 hover:bg-cyan-700"
+				href="/"
+			>
+				Volver
+			</a>
+		{/if}
+	</nav>
+
+	<PlayButton />
+
+	<!-- Componente Login/Profile con renderizado condicional -->
+	<Login />
+</header>
