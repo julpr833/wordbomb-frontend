@@ -46,6 +46,9 @@ export const authActions = {
     // Clear localStorage
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_data");
+
+    // Redirect to main page
+    location.reload();
   },
 
   initialize: () => {

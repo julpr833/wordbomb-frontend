@@ -1,0 +1,33 @@
+---
+import Card from "./Card.astro";
+import Explosion from "./Explosion.astro";
+---
+
+<section
+  id="how-to-play"
+  class="relative box-content pt-24 flex flex-col items-center"
+>
+  <Explosion
+    class="absolute opacity-50 scale-180"
+    outerColor="#BA421A"
+    innerColor="#8E1E18"
+  />
+  <h2
+    class="lg:text-5xl tracking-wide font-extrabold font-display text-white text-shadow-sm opacity-80 text-shadow-yellow-800 rotate-3"
+  >
+    Cómo jugar
+  </h2>
+  <div class="flex flex-row items-center justify-center gap-6 my-8 pb-12">
+    <Card class="-rotate-8" emoji="🎮">
+      <p class="opacity-90">Crea o unete a una sala</p>
+    </Card>
+    <Card emoji="⌨️">
+      <p class="opacity-90">
+        Escribe rápido una palabra con la sílaba que te toca
+      </p>
+    </Card>
+    <Card class="rotate-4" emoji="🏆">
+      <p class="opacity-90">El último en pie gana. ¡No explotes! 💣</p>
+    </Card>
+  </div>
+</section>
