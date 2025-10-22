@@ -14,14 +14,14 @@
 	<nav class="justify-self-start font-display">
 		{#if !showReturn}
 			<ul class="flex items-center text-balance text-center gap-8 text-orange-400 text-lg cursor-pointer">
-				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-100 opacity-90">
-					<a href="#ranking">Ranking</a>
-				</li>
 				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90">
 					<a href="#how-to-play">Reglas</a>
 				</li>
 				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90">
 					<a href="#gamemodes">Modos de Juego</a>
+				</li>
+				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-100 opacity-90">
+					<a href="#ranking">Ranking</a>
 				</li>
 				<li class="hover:text-orange-200 hover:rotate-6 transition-[transform, colors] duration-200 opacity-90">
 					<a href="#footer">Contacto</a>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.js';
 	import Header from '$lib/components/Header.svelte';
@@ -12,9 +12,9 @@
 
 	// Manejar redirección después del login
 	onMount(() => {
-		const urlParams = new URLSearchParams($page.url.search);
+		const urlParams = new URLSearchParams(page.url.search);
 		const redirectTo = urlParams.get('redirect');
-		
+
 		// Si hay un parámetro de redirección y el usuario está autenticado
 		if (redirectTo && $authStore.isAuthenticated) {
 			// Decodificar la URL de destino y redirigir

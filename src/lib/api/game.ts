@@ -47,9 +47,13 @@ export const gameApi = {
 	},
 
 	joinRoom: async (roomCode: string, username: string): Promise<JoinRoomResponse> => {
-		return api.post<JoinRoomResponse>('/api/game/join-room', { roomCode, username }, {
-			useFormData: true
-		});
+		return api.post<JoinRoomResponse>(
+			'/api/game/join-room',
+			{ roomCode, username },
+			{
+				useFormData: true
+			}
+		);
 	},
 
 	getRoom: async (roomCode: string): Promise<RoomResponse> => {
@@ -57,14 +61,22 @@ export const gameApi = {
 	},
 
 	leaveRoom: async (roomCode: string): Promise<{ success: boolean; message: string }> => {
-		return api.post<{ success: boolean; message: string }>('/api/game/leave-room', { roomCode }, {
-			useFormData: true
-		});
+		return api.post<{ success: boolean; message: string }>(
+			'/api/game/leave-room',
+			{ roomCode },
+			{
+				useFormData: true
+			}
+		);
 	},
 
 	startGame: async (roomCode: string): Promise<{ success: boolean; message: string }> => {
-		return api.post<{ success: boolean; message: string }>('/api/game/start', { roomCode }, {
-			useFormData: true
-		});
+		return api.post<{ success: boolean; message: string }>(
+			'/api/game/start',
+			{ roomCode },
+			{
+				useFormData: true
+			}
+		);
 	}
 };

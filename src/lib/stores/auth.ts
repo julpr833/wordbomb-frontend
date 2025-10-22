@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 
 export interface User {
 	id: string;
@@ -38,7 +39,7 @@ export const authActions = {
 		if (browser) {
 			localStorage.setItem('auth_token', token);
 			localStorage.setItem('user_data', JSON.stringify(user));
-			
+
 			// También establecer cookie para el servidor
 			document.cookie = `auth_token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
 			document.cookie = `user_data=${encodeURIComponent(JSON.stringify(user))}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
@@ -54,14 +55,15 @@ export const authActions = {
 			isLoading: false
 		}));
 
-		// Limpiar localStorage y cookies (solo en el navegador)
+		// Limpiar localStorage
 		if (browser) {
 			localStorage.removeItem('auth_token');
 			localStorage.removeItem('user_data');
-			
+
 			// Limpiar cookies
 			document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 			document.cookie = 'user_data=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+			goto('/');
 		}
 	},
 

@@ -1,11 +1,15 @@
-import '../app.css';
-import { onMount } from 'svelte';
-import { authActions } from '$lib/stores/auth.js';
+<script lang="ts">
+	import '../app.css';
+	import { onMount } from 'svelte';
+	import { authActions } from '$lib/stores/auth.js';
 
-export let title = 'Wordbomb';
-export let description = '';
+	export const title = 'Wordbomb';
+	export const description = '';
 
-onMount(() => {
-	// Inicializar store de auth
-	authActions.initialize();
-});
+	onMount(() => {
+		// Inicializar store de auth
+		authActions.initialize();
+	});
+</script>
+
+<slot />

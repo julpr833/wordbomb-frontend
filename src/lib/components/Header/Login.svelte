@@ -4,6 +4,8 @@
 	import Profile from './Profile.svelte';
 	import { authStore } from '$lib/stores/auth.js';
 	import { blur } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 
 	const TABS = {
 		LOGIN: 0,
@@ -35,6 +37,13 @@
 			tabChangerAfterOffset = e.target.id === 'login-tab' ? 0 : 50;
 		}
 	}
+
+	onMount(() => {
+		const urlParams = new URLSearchParams(page.url.search);
+		const redirectTo = urlParams.get('redirect');
+		if (redirectTo)
+			handleModalOpen();
+	})
 </script>
 
 {#if isAuthenticated}
@@ -53,7 +62,8 @@
 <dialog
 	bind:this={authDialog}
 	on:close={handleModalClose}
-	class="fixed m-auto backdrop:bg-blue-950/50 backdrop:backdrop-blur-xs bg-gradient-to-br from-[#0B192C] via-[#11243d] to-[#0B192C] shadow-[2px_2px_10px_rgba(0,0,0,0.35)] min-w-1/4 opacity-0 transition-opacity duration-300 ease-in-out"
+	closedby="any"
+	class="fixed m-auto backdrop:bg-blue-950/50 backdrop:backdrop-blur-xs bg-linear-to-br from-[#0B192C] via-[#11243d] to-[#0B192C] shadow-[2px_2px_10px_rgba(0,0,0,0.35)] min-w-1/4 opacity-0 transition-opacity duration-300 ease-in-out [&_input]:text-slate-800"
 >
 	<div
 		id="tab-changer"

@@ -47,7 +47,7 @@
 </script>
 
 <form
-	class="p-4 bg-gradient-to-br flex justify-center min-w-full content-box rounded-b-md"
+	class="p-4 flex justify-center min-w-full content-box rounded-b-md"
 	in:blur
 	out:fade={{ duration: 0 }}
 	bind:this={form}

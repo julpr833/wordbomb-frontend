@@ -16,7 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const isRoomRoute = pathname.startsWith('/room/');
 
 	// Verificar si la ruta actual requiere autenticación
-	const requiresAuth = protectedRoutes.some(route => pathname === route) || isRoomRoute;
+	const requiresAuth = protectedRoutes.some((route) => pathname === route) || isRoomRoute;
 
 	// Si la ruta requiere autenticación, verificar el token
 	if (requiresAuth) {
@@ -30,7 +30,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			throw redirect(302, `/?redirect=${redirectTo}`);
 		}
 
-		// TODO: Aquí podrías verificar la validez del token con tu API
+		// TODO: Aquí podría verificar la validez del token con la API
 		// Por ahora solo verificamos que exista
 		try {
 			// Opcional: verificar token con la API

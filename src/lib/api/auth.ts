@@ -16,11 +16,10 @@ export interface RegisterRequest {
 	username: string;
 	email: string;
 	password: string;
+	password_confirmation: string;
 }
 
 export interface AuthResponse {
-	success: boolean;
-	message: string;
 	user?: User;
 	token?: string;
 }
