@@ -1,8 +1,11 @@
 <script lang="ts">
   import RegisterForm from "./RegisterForm.svelte";
   import LoginForm from "./LoginForm.svelte";
+  import Profile from "./Profile.svelte";
+  import { authStore, authActions } from "../../../stores/auth";
+  import { onMount } from "svelte";
 
-  import { blur, fade } from "svelte/transition";
+  import { blur } from "svelte/transition";
 
   const TABS = {
     LOGIN: 0,
@@ -11,6 +14,9 @@
 
   let selectedTab = TABS.LOGIN;
   let authDialog: HTMLDialogElement;
+
+  // Reactive auth state
+  $: isAuthenticated = $authStore.isAuthenticated;
 
   function handleModalOpen() {
     authDialog.showModal();
@@ -31,13 +37,25 @@
       tabChangerAfterOffset = e.target.id === "login-tab" ? 0 : 50;
     }
   }
+
+  // Initialize auth state on component mount
+  onMount(() => {
+    authActions.initialize();
+  });
 </script>
 
-<button
-  on:click={handleModalOpen}
-  class="justify-self-end text-white bg-orange-800 py-1.5 px-3 rounded-sm font-display text-xl hover:bg-orange-600 transition-colors duration-200 shadow-sm shadow-blue-950 inset-shadow-sm inset-shadow-orange-200 cursor-pointer"
-  >Ingresar</button
->
+{#if isAuthenticated}
+  <!-- Show Profile component when user is logged in -->
+  <Profile />
+{:else}
+  <!-- Show Login button when user is not logged in -->
+  <button
+    on:click={handleModalOpen}
+    in:blur
+    class="justify-self-end text-white bg-orange-800 py-1.5 px-3 rounded-sm font-display text-xl hover:bg-orange-600 transition-colors duration-200 shadow-sm shadow-blue-950 inset-shadow-sm inset-shadow-orange-200 cursor-pointer"
+    >Ingresar</button
+  >
+{/if}
 
 <dialog
   bind:this={authDialog}
