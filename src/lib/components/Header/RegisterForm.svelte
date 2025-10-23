@@ -58,7 +58,6 @@
 				errorMessage = result.message || { error: 'Error al crear la cuenta' };
 			}
 		} catch (error) {
-			console.error('Error de registro:', error);
 			errorMessage = error as Object;
 		} finally {
 			isLoading = false;

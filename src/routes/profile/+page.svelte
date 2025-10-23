@@ -4,6 +4,7 @@
 	import { authApi, type GetProfileResponse, type User } from '$lib/api/auth';
 	import { onMount } from 'svelte';
 	import EditProfile from '$lib/components/Profile/EditProfile.svelte';
+	import DeleteAccount from '$lib/components/Profile/DeleteAccount.svelte';
 
 	// Estado reactivo del usuario
 	$: user = $authStore.user;
@@ -142,13 +143,14 @@
 		</div>
 
 		<!-- Botón de logout -->
-		<div class="text-center">
+		<div class="flex flex-col items-center justify-center gap-4">
 			<button
 				on:click={() => authActions.logout()}
 				class="rounded-lg bg-orange-500 px-6 py-3 font-medium text-white transition-colors hover:bg-orange-600"
 			>
 				Cerrar Sesión
 			</button>
+			<DeleteAccount />
 		</div>
 	</div>
 </div>

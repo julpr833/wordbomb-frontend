@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import EditProfileForm from './EditProfileForm.svelte';
 
 	let dialog: HTMLDialogElement;

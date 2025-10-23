@@ -36,7 +36,6 @@
 				form.reset();
 			}
 		} catch (error) {
-			console.error('Error de login:', error);
 			errorMessage = (error as string) || 'Error al iniciar sesión';
 		} finally {
 			isLoading = false;

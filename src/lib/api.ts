@@ -73,12 +73,12 @@ export async function apiRequest<T>(
 				}
 			}
 
-			throw errorData.error;
+			console.error(`API ${method} ${endpoint} error:`, errorData);
+			throw errorData.error || errorData;
 		}
 
 		return await response.json();
 	} catch (error) {
-		console.error(`API ${method} ${endpoint} error:`, error);
 		throw error;
 	}
 }
@@ -100,6 +100,9 @@ export const api = {
 		options?: { useFormData?: boolean; headers?: Record<string, string> }
 	) => apiRequest<T>('PATCH', endpoint, data, options),
 
-	delete: <T>(endpoint: string, options?: { headers?: Record<string, string> }) =>
-		apiRequest<T>('DELETE', endpoint, undefined, options)
+	delete: <T>(
+		endpoint: string,
+		data?: any,
+		options?: { useFormData?: boolean; headers?: Record<string, string> }
+	) => apiRequest<T>('DELETE', endpoint, data, options)
 };

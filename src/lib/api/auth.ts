@@ -52,23 +52,12 @@ export interface GetStatsResponse {
 // Funciones de API para autenticación
 export const authApi = {
 	login: async (credentials: LoginRequest): Promise<AuthResponse> => {
-		console.log('Enviando datos de login:', {
-			username: credentials.username,
-			password: '[OCULTO]'
-		});
-
 		return api.post<AuthResponse>('/api/auth/login', credentials, {
 			useFormData: true
 		});
 	},
 
 	register: async (userData: RegisterRequest): Promise<AuthResponse> => {
-		console.log('Enviando datos de registro:', {
-			username: userData.username,
-			email: userData.email,
-			password: '[OCULTO]'
-		});
-
 		return api.post<AuthResponse>('/api/auth/signup', userData, {
 			useFormData: true
 		});
@@ -89,7 +78,6 @@ export const authApi = {
 			await api.get('/api/auth/verify');
 			return true;
 		} catch (error) {
-			console.error('Error verificando token:', error);
 			return false;
 		}
 	},
@@ -105,7 +93,6 @@ export const authApi = {
 			);
 			return response;
 		} catch (error) {
-			console.error('Error regenerando avatar:', error);
 			return false;
 		}
 	},
@@ -119,6 +106,19 @@ export const authApi = {
 			return response;
 		} catch (error) {
 			// Mostrar el error en el front
+			throw error;
+		}
+	},
+
+	deleteAccount: async (data: { password: string }) => {
+		try {
+			const response = await api.delete<AuthResponse>('/api/users/delete-account', data, {
+				useFormData: true
+			});
+			authActions.logout();
+			authApi.logout();
+			return response;
+		} catch (error) {
 			throw error;
 		}
 	},
