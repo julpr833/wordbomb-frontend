@@ -34,12 +34,10 @@
 
 				// Resetear formulario
 				form.reset();
-			} else {
-				errorMessage = result.message || 'Error al iniciar sesión';
 			}
 		} catch (error) {
 			console.error('Error de login:', error);
-			errorMessage = error instanceof Error ? error.message : 'Error al iniciar sesión';
+			errorMessage = (error as string) || 'Error al iniciar sesión';
 		} finally {
 			isLoading = false;
 		}
@@ -47,22 +45,22 @@
 </script>
 
 <form
-	class="p-4 flex justify-center min-w-full content-box rounded-b-md"
+	class="content-box flex min-w-full justify-center rounded-b-md p-4"
 	in:blur
 	out:fade={{ duration: 0 }}
 	bind:this={form}
 	on:submit={handleFormSubmit}
 >
 	<fieldset
-		class="min-w-10/12 flex flex-col gap-2 items-center text-center text-white"
+		class="flex min-w-10/12 flex-col items-center gap-2 text-center text-white"
 		disabled={isLoading}
 	>
-		<legend class="font text-orange-100 opacity-90 text-2xl mb-2 font-display-header"
+		<legend class="font mb-2 font-display-header text-2xl text-orange-100 opacity-90"
 			>Ingresa a tu cuenta</legend
 		>
 
-		<div class="flex flex-col min-w-full">
-			<label for="username" class="font-display self-start -mb-2 mx-1 opacity-80 text-orange-400"
+		<div class="flex min-w-full flex-col">
+			<label for="username" class="mx-1 -mb-2 self-start font-display text-orange-400 opacity-80"
 				>Usuario</label
 			>
 			<input
@@ -70,13 +68,13 @@
 				name="username"
 				id="username"
 				placeholder="Usuario"
-				class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
+				class="my-2 min-w-full rounded-md px-2 py-1.5 font-mono outline outline-white/70 transition-all duration-250 placeholder:text-sm focus:outline-[#FF6500]"
 				required
 				disabled={isLoading}
 			/>
 		</div>
-		<div class="flex flex-col min-w-full">
-			<label for="password" class="font-display self-start -mb-2 mx-1 opacity-80 text-orange-400"
+		<div class="flex min-w-full flex-col">
+			<label for="password" class="mx-1 -mb-2 self-start font-display text-orange-400 opacity-80"
 				>Contraseña</label
 			>
 			<input
@@ -84,29 +82,23 @@
 				name="password"
 				id="password"
 				placeholder="Contraseña"
-				class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
+				class="my-2 min-w-full rounded-md px-2 py-1.5 font-mono outline outline-white/70 transition-all duration-250 placeholder:text-sm focus:outline-[#FF6500]"
 				required
 				disabled={isLoading}
 			/>
 		</div>
 		{#if errorMessage}
-			<span class="text-red-400 text-sm">{errorMessage}</span>
+			<span class="text-sm text-red-400">{errorMessage}</span>
 		{/if}
 		<button
 			type="submit"
-			class="min-w-2/3 mt-2 bg-orange-400 py-1 px-3 rounded-sm font-display text-xl hover:bg-orange-300 transition-colors duration-200 shadow-[2px_2px_10px_rgba(0,0,0,0.35)] cursor-pointer inset-shadow-sm inset-shadow-orange-200 disabled:opacity-50 disabled:cursor-not-allowed"
+			class="mt-2 min-w-2/3 cursor-pointer rounded-sm bg-orange-400 px-3 py-1 font-display text-xl shadow-[2px_2px_10px_rgba(0,0,0,0.35)] inset-shadow-sm inset-shadow-orange-200 transition-colors duration-200 hover:bg-orange-300 disabled:cursor-not-allowed disabled:opacity-50"
 			disabled={isLoading}
 		>
 			{#if isLoading}
 				<span class="flex items-center gap-2">
-					<svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-						<circle
-							class="opacity-25"
-							cx="12"
-							cy="12"
-							r="10"
-							stroke="currentColor"
-							stroke-width="4"
+					<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
 						></circle>
 						<path
 							class="opacity-75"

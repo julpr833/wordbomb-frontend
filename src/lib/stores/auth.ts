@@ -49,6 +49,7 @@ export const authActions = {
 	logout: () => {
 		authStore.update((state) => ({
 			...state,
+			id: '',
 			isAuthenticated: false,
 			user: null,
 			token: null,
@@ -106,6 +107,13 @@ export const authActions = {
 		authStore.update((state) => ({
 			...state,
 			isLoading: loading
+		}));
+	},
+
+	reloadUserData: (user: User) => {
+		authStore.update((state) => ({
+			...state,
+			user: user
 		}));
 	}
 };

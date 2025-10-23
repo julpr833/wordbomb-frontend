@@ -29,28 +29,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 			const redirectTo = encodeURIComponent(pathname);
 			throw redirect(302, `/?redirect=${redirectTo}`);
 		}
-
-		// TODO: Aquí podría verificar la validez del token con la API
-		// Por ahora solo verificamos que exista
-		try {
-			// Opcional: verificar token con la API
-			// const response = await fetch(`${API_BASE_URL}/api/auth/verify`, {
-			//   headers: { Authorization: `Bearer ${token}` }
-			// });
-			// if (!response.ok) throw new Error('Token inválido');
-		} catch (error) {
-			// Si el token es inválido, limpiar cookies y redirigir
-			event.cookies.delete('auth_token', { path: '/' });
-			event.cookies.delete('user_data', { path: '/' });
-			throw redirect(302, '/');
-		}
 	}
 
 	// Si el usuario está autenticado y trata de acceder a rutas de invitado,
 	// redirigir a la página principal (opcional)
 	if (pathname === '/' && event.cookies.get('auth_token')) {
 		// Opcional: redirigir usuarios autenticados a una página diferente
-		// throw redirect(302, '/dashboard');
+		// throw redirect(302, '/');
 	}
 
 	// Continuar con el procesamiento normal de la solicitud

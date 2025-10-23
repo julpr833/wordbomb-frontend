@@ -1,4 +1,5 @@
 import { config } from './config/env.js';
+import { goto } from '$app/navigation';
 
 export interface ApiResponse<T = any> {
 	success: boolean;
@@ -13,7 +14,7 @@ export interface ApiError {
 
 // Función genérica para hacer peticiones a la API usando SvelteKit
 export async function apiRequest<T>(
-	method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+	method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
 	endpoint: string,
 	data?: any,
 	options?: {
@@ -22,7 +23,7 @@ export async function apiRequest<T>(
 	}
 ): Promise<T> {
 	const url = `${config.apiBaseUrl}${endpoint}`;
-	
+
 	let headers: Record<string, string> = {};
 	let body: string | FormData | undefined;
 
@@ -61,16 +62,18 @@ export async function apiRequest<T>(
 
 		if (!response.ok) {
 			const errorData: ApiError = await response.json().catch(() => ({}));
-			
+
 			if (response.status === 401) {
 				// Token expirado o inválido, limpiar auth (solo en el navegador)
 				if (typeof window !== 'undefined') {
 					localStorage.removeItem('auth_token');
 					localStorage.removeItem('user_data');
+					await goto('/');
+					location.reload();
 				}
 			}
 
-			throw new Error(errorData.error || errorData.message || `${method} ${endpoint} failed`);
+			throw errorData.error;
 		}
 
 		return await response.json();
@@ -84,13 +87,19 @@ export async function apiRequest<T>(
 export const api = {
 	get: <T>(endpoint: string, options?: { headers?: Record<string, string> }) =>
 		apiRequest<T>('GET', endpoint, undefined, options),
-	
-	post: <T>(endpoint: string, data?: any, options?: { useFormData?: boolean; headers?: Record<string, string> }) =>
-		apiRequest<T>('POST', endpoint, data, options),
-	
-	put: <T>(endpoint: string, data?: any, options?: { useFormData?: boolean; headers?: Record<string, string> }) =>
-		apiRequest<T>('PUT', endpoint, data, options),
-	
+
+	post: <T>(
+		endpoint: string,
+		data?: any,
+		options?: { useFormData?: boolean; headers?: Record<string, string> }
+	) => apiRequest<T>('POST', endpoint, data, options),
+
+	patch: <T>(
+		endpoint: string,
+		data?: any,
+		options?: { useFormData?: boolean; headers?: Record<string, string> }
+	) => apiRequest<T>('PATCH', endpoint, data, options),
+
 	delete: <T>(endpoint: string, options?: { headers?: Record<string, string> }) =>
 		apiRequest<T>('DELETE', endpoint, undefined, options)
 };

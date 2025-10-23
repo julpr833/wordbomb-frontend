@@ -8,27 +8,28 @@
 	// Bindings
 	let form: HTMLFormElement;
 	let isLoading = false;
-	let errorMessage = '';
+	let errorMessage: Object = {};
 	let successMessage = '';
 
 	// Funciones
 	function handleModalClose() {
 		authDialog.classList.add('opacity-0');
-		errorMessage = '';
+		errorMessage = {};
 		successMessage = '';
 	}
 
 	async function handleFormSubmit(e: Event) {
 		e.preventDefault();
 		isLoading = true;
-		errorMessage = '';
+		errorMessage = {};
 		successMessage = '';
 
 		const formData = new FormData(form);
 		const userData = {
 			username: formData.get('username') as string,
 			email: formData.get('email') as string,
-			password: formData.get('password') as string
+			password: formData.get('password') as string,
+			password_confirmation: formData.get('password_confirmation') as string
 		};
 
 		// Validar confirmación de contraseña
@@ -36,7 +37,7 @@
 		const passwordConfirmation = formData.get('password_confirmation') as string;
 
 		if (password !== passwordConfirmation) {
-			errorMessage = 'Las contraseñas no coinciden';
+			errorMessage = { error: 'Las contraseñas no coinciden' };
 			isLoading = false;
 			return;
 		}
@@ -50,14 +51,15 @@
 
 				// Cerrar modal automáticamente después de 2 segundos
 				setTimeout(() => {
-					handleModalClose();
+					successMessage = '';
+					authDialog.close();
 				}, 2000);
 			} else {
-				errorMessage = result.message || 'Error al crear la cuenta';
+				errorMessage = result.message || { error: 'Error al crear la cuenta' };
 			}
 		} catch (error) {
 			console.error('Error de registro:', error);
-			errorMessage = error instanceof Error ? error.message : 'Error al crear la cuenta';
+			errorMessage = error as Object;
 		} finally {
 			isLoading = false;
 		}
@@ -65,36 +67,29 @@
 </script>
 
 <form
-	class="p-4 flex justify-center min-w-full content-box rounded-b-md"
+	class="content-box flex min-w-full justify-center rounded-b-md p-4"
 	in:blur
 	out:fade={{ duration: 0 }}
 	bind:this={form}
 	on:submit={handleFormSubmit}
 >
 	<fieldset
-		class="min-w-10/12 flex flex-col gap-2 items-center text-center text-white"
+		class="flex min-w-10/12 flex-col items-center gap-2 text-center text-white"
 		disabled={isLoading}
 	>
-		<legend class="font text-orange-100 opacity-90 text-2xl mb-2 font-display-header"
+		<legend class="font mb-2 font-display-header text-2xl text-orange-100 opacity-90"
 			>Crea una cuenta</legend
 		>
 
 		<!-- Mensaje de éxito -->
 		{#if successMessage}
-			<div class="mb-4 p-2 bg-green-500/20 border border-green-500/50 rounded-md">
-				<p class="text-green-300 text-sm">{successMessage}</p>
+			<div class="mb-4 rounded-md border border-green-500/50 bg-green-500/20 p-2">
+				<p class="text-sm text-green-300">{successMessage}</p>
 			</div>
 		{/if}
 
-		<!-- Mensaje de error -->
-		{#if errorMessage}
-			<div class="mb-4 p-2 bg-red-500/20 border border-red-500/50 rounded-md">
-				<p class="text-red-300 text-sm">{errorMessage}</p>
-			</div>
-		{/if}
-
-		<div class="flex flex-col min-w-full">
-			<label for="username" class="font-display self-start -mb-2 mx-1 opacity-80 text-orange-400"
+		<div class="flex min-w-full flex-col">
+			<label for="username" class="mx-1 -mb-2 self-start font-display text-orange-400 opacity-80"
 				>Usuario</label
 			>
 			<input
@@ -102,13 +97,13 @@
 				name="username"
 				id="username"
 				placeholder="Ingresa tu usuario..."
-				class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
+				class="my-2 min-w-full rounded-md px-2 py-1.5 font-mono outline outline-white/70 transition-all duration-250 placeholder:text-sm focus:outline-[#FF6500]"
 				required
 				disabled={isLoading}
 			/>
 		</div>
-		<div class="flex flex-col min-w-full">
-			<label for="email" class="font-display self-start -mb-2 mx-1 opacity-80 text-orange-400"
+		<div class="flex min-w-full flex-col">
+			<label for="email" class="mx-1 -mb-2 self-start font-display text-orange-400 opacity-80"
 				>Correo electrónico</label
 			>
 			<input
@@ -116,13 +111,13 @@
 				name="email"
 				id="email"
 				placeholder="Ingresa tu correo electrónico"
-				class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
+				class="my-2 min-w-full rounded-md px-2 py-1.5 font-mono outline outline-white/70 transition-all duration-250 placeholder:text-sm focus:outline-[#FF6500]"
 				required
 				disabled={isLoading}
 			/>
 		</div>
-		<div class="flex flex-col min-w-full">
-			<label for="password" class="font-display self-start -mb-2 mx-1 opacity-80 text-orange-400"
+		<div class="flex min-w-full flex-col">
+			<label for="password" class="mx-1 -mb-2 self-start font-display text-orange-400 opacity-80"
 				>Contraseña</label
 			>
 			<input
@@ -130,15 +125,15 @@
 				name="password"
 				id="password"
 				placeholder="Contraseña"
-				class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
+				class="my-2 min-w-full rounded-md px-2 py-1.5 font-mono outline outline-white/70 transition-all duration-250 placeholder:text-sm focus:outline-[#FF6500]"
 				required
 				disabled={isLoading}
 			/>
 		</div>
-		<div class="flex flex-col min-w-full">
+		<div class="flex min-w-full flex-col">
 			<label
 				for="password_confirmation"
-				class="font-display self-start -mb-2 mx-1 opacity-80 text-orange-400"
+				class="mx-1 -mb-2 self-start font-display text-orange-400 opacity-80"
 				>Confirmar contraseña</label
 			>
 			<input
@@ -146,26 +141,28 @@
 				name="password_confirmation"
 				id="password_confirmation"
 				placeholder="Confirma tu contraseña..."
-				class="min-w-full outline outline-white/70 rounded-md px-2 py-1.5 my-2 focus:outline-[#FF6500] transition-all duration-250 placeholder:text-sm font-mono"
+				class="my-2 min-w-full rounded-md px-2 py-1.5 font-mono outline outline-white/70 transition-all duration-250 placeholder:text-sm focus:outline-[#FF6500]"
 				required
 				disabled={isLoading}
 			/>
 		</div>
+		<!-- Mensaje de error -->
+		{#if errorMessage}
+			<ul class="text-sm text-red-400">
+				{#each Object.values(errorMessage) as error}
+					<li>{error}</li>
+				{/each}
+			</ul>
+		{/if}
 		<button
 			type="submit"
-			class="min-w-2/3 mt-2 bg-orange-400 py-1 px-3 rounded-sm font-display text-xl hover:bg-orange-300 transition-colors duration-200 shadow-[2px_2px_10px_rgba(0,0,0,0.35)] cursor-pointer inset-shadow-sm inset-shadow-orange-200 disabled:opacity-50 disabled:cursor-not-allowed"
+			class="mt-2 min-w-2/3 cursor-pointer rounded-sm bg-orange-400 px-3 py-1 font-display text-xl shadow-[2px_2px_10px_rgba(0,0,0,0.35)] inset-shadow-sm inset-shadow-orange-200 transition-colors duration-200 hover:bg-orange-300 disabled:cursor-not-allowed disabled:opacity-50"
 			disabled={isLoading}
 		>
 			{#if isLoading}
 				<span class="flex items-center gap-2">
-					<svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-						<circle
-							class="opacity-25"
-							cx="12"
-							cy="12"
-							r="10"
-							stroke="currentColor"
-							stroke-width="4"
+					<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
 						></circle>
 						<path
 							class="opacity-75"
