@@ -1,7 +1,7 @@
 <script lang="ts">
 	interface Props {
 		class?: string;
-		emoji: string;
+		emoji?: string;
 		animate?: boolean;
 		fromColor?: string;
 		toColor?: string;
@@ -20,7 +20,8 @@
 </script>
 
 <article
-	class="flex flex-col items-center text-white max-w-3xs text-center h-48 text-lg w-48 p-4 box-content tracking-tight font-mono text-pretty shadow-md shadow-[#02001e69] border-2 rounded-md justify-around {animate && 'scrollanim-float-around'} {className}"
+	class="box-content flex h-48 w-48 max-w-3xs flex-col items-center justify-around rounded-md border-2 p-4 text-center font-mono text-lg tracking-tight text-pretty text-white shadow-md shadow-[#02001e69] {animate &&
+		'scrollanim-float-around'} {className}"
 	style="background: linear-gradient(to bottom right, {fromColor}, {toColor}); border-color: {borderColor};"
 	{...restProps}
 >
