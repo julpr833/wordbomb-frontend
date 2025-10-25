@@ -12,12 +12,6 @@
 	let successMessage = '';
 
 	// Funciones
-	function handleModalClose() {
-		authDialog.classList.add('opacity-0');
-		errorMessage = {};
-		successMessage = '';
-	}
-
 	async function handleFormSubmit(e: Event) {
 		e.preventDefault();
 		isLoading = true;

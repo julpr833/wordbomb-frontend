@@ -1,14 +1,22 @@
 import { api } from '../api.js';
 
-export interface RoomConfig {
-	code: string;
-	maxPlayers: number;
+// INTERFAZ PARA LOS DATOS DE ENTRADA (lo que el formulario enviará)
+// Nombres en snake_case para coincidir con tu API de Flask (request.form)
+// src/lib/api/game.ts
+export interface CreateRoomData {
+	max_players: number;
 	lives: number;
-	difficulty: string;
-	gameMode: string;
-	host: string;
+	difficulty: number;
+	game_mode: number;
 }
 
+// INTERFAZ PARA LA RESPUESTA (lo que tu API de Flask devuelve)
+export interface CreateRoomResponse {
+	success: string;
+	room_code: string;
+}
+
+/* --- Tus otras interfaces (se mantienen para futuros métodos) --- */
 export interface Room {
 	id: string;
 	code: string;
@@ -37,18 +45,23 @@ export interface JoinRoomResponse {
 		room: Room;
 	};
 }
+/* --- Fin de otras interfaces --- */
 
 // Funciones de API para el juego
 export const gameApi = {
-	createRoom: async (roomData: RoomConfig): Promise<RoomResponse> => {
-		return api.post<RoomResponse>('/api/game/create-room', roomData, {
-			useFormData: true
+	/**
+	 * Llama a la API para crear una nueva sala.
+	 * Coincide con tu endpoint de Flask /create-room
+	 */
+	createRoom: async (roomData: CreateRoomData): Promise<CreateRoomResponse> => {
+		return api.post<CreateRoomResponse>('/game/create-room', roomData, {
+			useFormData: true // Envía como 'request.form'
 		});
 	},
 
 	joinRoom: async (roomCode: string, username: string): Promise<JoinRoomResponse> => {
 		return api.post<JoinRoomResponse>(
-			'/api/game/join-room',
+			'/game/join-room',
 			{ roomCode, username },
 			{
 				useFormData: true
@@ -57,12 +70,12 @@ export const gameApi = {
 	},
 
 	getRoom: async (roomCode: string): Promise<RoomResponse> => {
-		return api.get<RoomResponse>(`/api/game/room/${roomCode}`);
+		return api.get<RoomResponse>(`/game/room/${roomCode}`);
 	},
 
 	leaveRoom: async (roomCode: string): Promise<{ success: boolean; message: string }> => {
 		return api.post<{ success: boolean; message: string }>(
-			'/api/game/leave-room',
+			'/game/leave-room',
 			{ roomCode },
 			{
 				useFormData: true
@@ -72,7 +85,7 @@ export const gameApi = {
 
 	startGame: async (roomCode: string): Promise<{ success: boolean; message: string }> => {
 		return api.post<{ success: boolean; message: string }>(
-			'/api/game/start',
+			'/game/start',
 			{ roomCode },
 			{
 				useFormData: true

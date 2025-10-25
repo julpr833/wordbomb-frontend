@@ -41,6 +41,7 @@ export interface GetProfileResponse {
 	avatar_url: string;
 	banned: number;
 	registration_date: string;
+	role: 1 | 2;
 }
 
 export interface GetStatsResponse {

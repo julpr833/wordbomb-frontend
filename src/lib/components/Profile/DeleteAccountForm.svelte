@@ -46,7 +46,7 @@
 			/>
 		</div>
 
-		{#if errorMessage}
+		{#if errorMessage && Object.keys(errorMessage).length > 0}
 			<ul class="mx-4 text-sm text-red-400">
 				{errorMessage}
 			</ul>

@@ -91,6 +91,9 @@
 					{#if user?.email}
 						<p class="text-xs text-orange-300/70">{user.email}</p>
 					{/if}
+					{#if user?.role === 2}
+						<p class="mt-1 text-xs font-semibold text-cyan-500">Administrador</p>
+					{/if}
 				</div>
 
 				<!-- Elementos del menú -->
@@ -100,6 +103,15 @@
 						class="block w-full px-4 py-2 text-left text-sm text-orange-200 transition-colors duration-150 hover:bg-orange-400/20 hover:text-orange-100"
 					>
 						Perfil
+					</a>
+				{/if}
+
+				{#if user?.role === 2 && page.url.pathname !== '/admin'}
+					<a
+						href="/admin"
+						class="block w-full px-4 py-2 text-left text-sm text-orange-200 transition-colors duration-150 hover:bg-orange-400/20 hover:text-orange-100"
+					>
+						Panel de Administrador
 					</a>
 				{/if}
 

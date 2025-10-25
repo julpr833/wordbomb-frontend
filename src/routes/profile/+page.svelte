@@ -35,7 +35,8 @@
 			id: userData.id,
 			username: userData.username,
 			email: userData.email,
-			avatar: userData.avatar_url
+			avatar: userData.avatar_url,
+			role: userData.role
 		});
 	}
 
