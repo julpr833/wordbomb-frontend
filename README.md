@@ -173,7 +173,7 @@ VITE_APP_VERSION=1.0.0
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+Proyecto académico de primer año TSAS, para uso educativo.
 
 ---
 
