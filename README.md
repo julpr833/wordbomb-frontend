@@ -178,5 +178,5 @@ Proyecto académico de primer año TSAS, para uso educativo.
 ---
 
 <div align="center">
-    Desarrollado por [Tu Nombre] - 2025
+    Desarrollado por Call of Code - 2025
 </div>
