@@ -151,26 +151,6 @@ VITE_APP_VERSION=1.0.0
 
 2. La aplicación estará lista en el directorio `build`.
 
-3. Para servir la aplicación, puedes usar cualquier servidor web estático como Nginx o servirla con:
-   ```bash
-   npm run preview
-   ```
-
-### Despliegue en Vercel/Netlify
-
-1. Conecta tu repositorio a Vercel o Netlify
-2. Configura las variables de entorno
-3. Establece el directorio de salida como `build`
-4. El despliegue se hará automáticamente
-
-## Contribución
-
-1. Haz un fork del proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Haz commit de tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Haz push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
 ## Licencia
 
 Proyecto académico de primer año TSAS, para uso educativo.
