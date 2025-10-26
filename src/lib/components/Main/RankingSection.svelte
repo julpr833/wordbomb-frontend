@@ -1,6 +1,32 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Ranking from './Ranking/Ranking.svelte';
 	import RankingItem from './Ranking/RankingItem.svelte';
+	import { apiRequest } from '$lib/api';
+
+	interface RankingPlayer {
+		rank: number;
+		username: string;
+		avatar: string | null;
+		wins: number;
+		total_games: number;
+		winrate: number;
+		total_points: number;
+	}
+
+	let topPlayers: RankingPlayer[] = [];
+	let loading = true;
+
+	onMount(async () => {
+		try {
+			const response = await apiRequest<RankingPlayer[]>('GET', '/api/users/ranking');
+			topPlayers = response.slice(0, 7); // Top 7 para la página principal
+		} catch (error) {
+			console.error('Error cargando ranking:', error);
+		} finally {
+			loading = false;
+		}
+	});
 </script>
 
 <section id="ranking" class="relative box-content flex flex-col items-center">
@@ -8,13 +34,15 @@
 		RANKING
 	</h2>
 	<Ranking>
-		<RankingItem username="Ejemplo" elo={3000} />
-		<RankingItem username="Ejemplo" elo={2000} />
-		<RankingItem username="Ejemplo" elo={1000} />
-		<RankingItem username="Ejemplo" elo={800} />
-		<RankingItem username="Ejemplo" elo={700} />
-		<RankingItem username="Ejemplo" elo={600} />
-		<RankingItem username="Ejemplo" elo={500} />
+		{#if loading}
+			<div class="text-white text-center py-8">Cargando ranking...</div>
+		{:else if topPlayers.length === 0}
+			<div class="text-white text-center py-8">No hay datos de ranking aún</div>
+		{:else}
+			{#each topPlayers as player}
+				<RankingItem username={player.username} elo={player.wins} />
+			{/each}
+		{/if}
 	</Ranking>
 	<a
 		href="/ranking"

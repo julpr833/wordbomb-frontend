@@ -1,245 +1,289 @@
 <script lang="ts">
+	import Header from '$lib/components/Header.svelte';
+	import Timer from '$lib/components/Game/Timer.svelte';
+	import PromptDisplay from '$lib/components/Game/PromptDisplay.svelte';
+	import PlayersList from '$lib/components/Game/PlayersList.svelte';
+	import WordInput from '$lib/components/Game/WordInput.svelte';
+	import Chat from '$lib/components/Game/Chat.svelte';
+	import GameOver from '$lib/components/Game/GameOver.svelte';
 	import { onMount, onDestroy } from 'svelte';
-	import { authStore } from '$lib/stores/auth.js';
-	import { gameApi } from '$lib/api/game.js';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { gameApi } from '$lib/api/game.js';
+	import { socketService } from '$lib/socket.js';
+	import { gameStore, gameActions } from '$lib/stores/game.js';
+	import { authStore } from '$lib/stores/auth.js';
 
-	// Reactive variable for user
-	let user: any = null;
+	let code: string | undefined;
+	let isConnecting = true;
 
-	// Subscribe to auth store
-	authStore.subscribe((state) => {
-		user = state.user;
-	});
+	// Obtener el código del parámetro de la URL
+	$: code = page.params.roomCode;
+	$: error = $gameStore.error;
+	$: gameStatus = $gameStore.gameStatus;
+	$: players = $gameStore.players;
+	$: roomInfo = $gameStore.roomInfo;
+	$: currentUsername = $authStore.user?.username;
+	$: isCreator = roomInfo && currentUsername && roomInfo.creator === currentUsername;
+	
+	// Debug logging
+	$: if (roomInfo && currentUsername) {
+		console.log('Creator check:', {
+			currentUsername,
+			creator: roomInfo.creator,
+			isCreator
+		});
+	}
 
-	let roomData: any = null;
-	let isLoading = true;
-	let error = '';
-	let isHost = false;
-	let canStart = false;
-	let pollInterval: ReturnType<typeof setInterval>;
+	onMount(async () => {
+		if (!code || code.length !== 6) {
+			gameActions.setError('Código de sala inválido.');
+			isConnecting = false;
+			return;
+		}
 
-	$: roomCode = $page.params.roomCode;
+		// Esperar a que el auth store termine de cargar
+		if ($authStore.isLoading) {
+			await new Promise(resolve => {
+				const unsubscribe = authStore.subscribe(state => {
+					if (!state.isLoading) {
+						unsubscribe();
+						resolve(null);
+					}
+				});
+			});
+		}
 
-	// Cargar datos de la sala
-	async function loadRoomData() {
+		if (!$authStore.isAuthenticated || !$authStore.user?.username) {
+			gameActions.setError('Debes iniciar sesión para unirte a una sala.');
+			isConnecting = false;
+			return;
+		}
+
+		const currentUsername = $authStore.user.username;
+
 		try {
-			const response = await gameApi.getRoom(roomCode);
+			// Limpiar cualquier error previo
+			gameActions.setError(null);
+			
+			// Validar la existencia de la sala en el backend
+			const response = await gameApi.joinRoom(code);
+			console.log('Join room response:', response);
 
-			if (response.success && response.data) {
-				roomData = response.data.room;
-				isHost = roomData.host === user?.username;
-				canStart = roomData.players.length >= 2 && roomData.status === 'waiting';
-			} else {
-				error = response.message || 'Sala no encontrada';
+			if (!response.success) {
+				throw new Error(response.message || 'No se pudo unir a la sala.');
 			}
-		} catch (err) {
-			error = 'Error al cargar la sala';
-			console.error('Error loading room:', err);
-		} finally {
-			isLoading = false;
-		}
-	}
 
-	// Iniciar juego
-	async function startGame() {
-		if (!canStart) return;
-
-		try {
-			const response = await gameApi.startGame(roomCode);
-
-			if (response.success) {
-				// Redirigir al juego
-				goto(`/game/${roomCode}`);
-			} else {
-				error = response.message || 'Error al iniciar el juego';
+			const roomData: any = response.data?.room;
+			console.log('Room data:', roomData);
+			console.log('Creator from roomData:', roomData.creator);
+			
+			if (!roomData) {
+				throw new Error('No se recibió información de la sala.');
 			}
-		} catch (err) {
-			error = 'Error al iniciar el juego';
-			console.error('Error starting game:', err);
+			
+			// Actualizar el store con la información de la sala
+			gameActions.setRoomCode(code);
+			gameActions.updatePlayers(roomData.players || []);
+			
+			const roomInfoToUpdate = {
+				code: roomData.code || code,
+				gamemode: roomData.gamemode || 1,
+				difficulty: roomData.difficulty || 2,
+				lives: roomData.lives || 3,
+				max_players: roomData.max_players || 4,
+				state: roomData.state || 'waiting',
+				creator: roomData.creator
+			};
+			
+			console.log('Updating roomInfo with:', roomInfoToUpdate);
+			gameActions.updateRoomInfo(roomInfoToUpdate);
+
+			// Conectar al Socket.IO
+			socketService.connect();
+			
+			// Esperar un momento para que se establezca la conexión
+			await new Promise(resolve => setTimeout(resolve, 500));
+			
+			// Unirse a la sala
+			socketService.joinRoom(code, currentUsername);
+
+			isConnecting = false;
+		} catch (e: any) {
+			console.error('Error en join room:', e);
+			
+			// Si el error es "Ya te encuentras en una sala", intentar conectar de todas formas
+			if (e.error === 'Ya te encuentras en una sala.' || e.message?.includes('Ya te encuentras')) {
+				console.log('Usuario ya en sala, conectando Socket.IO de todas formas...');
+				
+				// Conectar al Socket.IO de todas formas
+				socketService.connect();
+				await new Promise(resolve => setTimeout(resolve, 500));
+				socketService.joinRoom(code, currentUsername);
+				
+				// Obtener el estado de la sala vía Socket.IO
+				socketService.getRoomState();
+				
+				isConnecting = false;
+			} else {
+				gameActions.setError(e.error || e.message || 'Error al unirse a la sala.');
+				isConnecting = false;
+			}
 		}
-	}
-
-	// Abandonar sala
-	async function leaveRoom() {
-		try {
-			await gameApi.leaveRoom(roomCode);
-			goto('/');
-		} catch (err) {
-			console.error('Error leaving room:', err);
-			// Aún así redirigir al inicio
-			goto('/');
-		}
-	}
-
-	// Copiar código de sala
-	function copyRoomCode() {
-		navigator.clipboard.writeText(roomCode);
-		// Aquí podrías mostrar una notificación de que se copió
-	}
-
-	// Polling para actualizar datos de la sala
-	function startPolling() {
-		pollInterval = setInterval(loadRoomData, 2000); // Actualizar cada 2 segundos
-	}
-
-	function stopPolling() {
-		if (pollInterval) {
-			clearInterval(pollInterval);
-		}
-	}
-
-	onMount(() => {
-		loadRoomData();
-		startPolling();
 	});
 
 	onDestroy(() => {
-		stopPolling();
+		// Limpiar al salir
+		if (code && currentUsername) {
+			socketService.leaveRoom();
+		}
 	});
+
+	function leaveRoom() {
+		socketService.leaveRoom();
+		socketService.disconnect();
+		gameActions.leaveRoom();
+		goto('/room-manager');
+	}
+
+	function startGame() {
+		socketService.startGame();
+	}
 </script>
 
 <svelte:head>
-	<title>Sala {roomCode} - Wordbomb</title>
-	<meta name="description" content="Sala de juego Wordbomb" />
+	<title>Sala {code} - Wordbomb</title>
 </svelte:head>
 
-<div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 flex items-center justify-center p-4">
-	{#if isLoading}
-		<div class="text-center">
-			<div class="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-			<p class="text-white text-lg">Cargando sala...</p>
+<Header showReturn={true} />
+
+<div class="min-h-screen bg-gradient-to-br from-[#0B192C] via-[#11243d] to-[#0B192C] py-8">
+	{#if isConnecting}
+		<div class="container mx-auto max-w-2xl px-4 text-center">
+			<div class="rounded-lg bg-[#1E3E62] p-8 shadow-lg">
+				<div class="mb-4 text-6xl">⏳</div>
+				<p class="font-display text-xl text-white/70">Conectando a la sala...</p>
+			</div>
 		</div>
 	{:else if error}
-		<div class="bg-blue-800/50 backdrop-blur-sm rounded-2xl p-8 max-w-md w-full text-center">
-			<div class="text-red-400 text-6xl mb-4">⚠️</div>
-			<h2 class="text-white text-xl font-semibold mb-4">Error</h2>
-			<p class="text-red-300 mb-6">{error}</p>
-			<button
-				on:click={() => goto('/')}
-				class="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium"
-			>
-				Volver al Inicio
-			</button>
+		<div class="container mx-auto max-w-2xl px-4 text-center">
+			<div class="rounded-lg bg-[#1E3E62] p-6 text-red-400 shadow-lg">
+				<p class="mb-4 font-display text-lg">{error}</p>
+				<button
+					on:click={() => goto('/room-manager')}
+					class="rounded-lg bg-orange-500 px-6 py-3 font-medium text-white transition-colors hover:bg-orange-600"
+				>
+					Volver
+				</button>
+			</div>
 		</div>
-	{:else if roomData}
-		<div class="bg-blue-800/50 backdrop-blur-sm rounded-2xl p-8 max-w-4xl w-full">
-			<!-- Header con bomba y código de sala -->
-			<div class="flex items-center justify-between mb-8">
-				<div class="flex items-center space-x-4">
-					<div class="w-16 h-16 bg-black rounded-full flex items-center justify-center">
-						<div class="w-8 h-8 bg-gray-700 rounded-full relative">
-							<div class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-1 h-4 bg-orange-500 rounded-full"></div>
-							<div class="absolute -top-1 left-1/2 transform -translate-x-1/2 w-0.5 h-2 bg-yellow-400 rounded-full"></div>
-						</div>
-					</div>
-					<h1 class="text-4xl font-bold text-orange-500">WORDBOMB</h1>
-				</div>
+	{:else if gameStatus === 'waiting'}
+		<!-- Sala de espera -->
+		<div class="container mx-auto max-w-4xl px-4">
+			<div class="mb-6 text-center">
+				<h1 class="mb-2 font-display-header text-5xl text-orange-400">
+					Sala {code}
+				</h1>
+				<p class="font-display text-lg text-white/70">Esperando jugadores...</p>
+			</div>
 
-				<div class="text-center">
-					<p class="text-white text-sm mb-2">Código de sala</p>
-					<div class="flex items-center space-x-2">
-						<span class="px-4 py-2 bg-orange-500 text-white rounded-lg font-mono text-lg">{roomCode}</span>
+			<div class="grid gap-6 lg:grid-cols-2">
+				<!-- Lista de jugadores -->
+				<PlayersList />
+
+				<!-- Información de la sala -->
+				<div class="rounded-lg bg-[#1E3E62] p-6 shadow-lg">
+					<h3 class="mb-4 font-display-header text-xl text-orange-400">Configuración</h3>
+					
+					{#if roomInfo}
+						<div class="space-y-3 text-left">
+							<div class="flex justify-between rounded-lg bg-[#0B192C] p-3">
+								<span class="font-display text-white/70">Modo de Juego:</span>
+								<span class="font-display-header font-bold text-white">
+									{roomInfo.gamemode === 1 ? 'Clásico' : roomInfo.gamemode === 2 ? 'Inverso' : 'Hardcore'}
+								</span>
+							</div>
+							<div class="flex justify-between rounded-lg bg-[#0B192C] p-3">
+								<span class="font-display text-white/70">Dificultad:</span>
+								<span class="font-display-header font-bold text-white">
+									{roomInfo.difficulty === 1 ? 'Fácil' : roomInfo.difficulty === 2 ? 'Normal' : 'Difícil'}
+								</span>
+							</div>
+							<div class="flex justify-between rounded-lg bg-[#0B192C] p-3">
+								<span class="font-display text-white/70">Vidas:</span>
+								<span class="font-display-header font-bold text-white">{roomInfo.lives}</span>
+							</div>
+							<div class="flex justify-between rounded-lg bg-[#0B192C] p-3">
+								<span class="font-display text-white/70">Jugadores:</span>
+								<span class="font-display-header font-bold text-white">
+									{players.length}/{roomInfo.max_players}
+								</span>
+							</div>
+						</div>
+					{/if}
+
+					<div class="mt-6 space-y-3">
+						{#if isCreator}
+							<button
+								on:click={startGame}
+								disabled={players.length < 2}
+								class="w-full rounded-lg bg-green-500 px-6 py-3 font-display-header text-lg font-bold text-white transition-colors hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								{players.length < 2 ? 'Esperando jugadores...' : 'Iniciar Juego'}
+							</button>
+						{:else}
+							<div class="rounded-lg bg-[#0B192C] p-4 text-center">
+								<p class="font-display text-white/70">Esperando que el host inicie el juego...</p>
+							</div>
+						{/if}
+
 						<button
-							on:click={copyRoomCode}
-							class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-							title="Copiar código"
+							on:click={leaveRoom}
+							class="w-full rounded-lg bg-red-500 px-6 py-3 font-medium text-white transition-colors hover:bg-red-600"
 						>
-							📋
+							Salir de la Sala
 						</button>
 					</div>
 				</div>
 			</div>
-
-			<!-- Información de la sala -->
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-				<!-- Configuración -->
-				<div class="bg-blue-700/50 rounded-xl p-6">
-					<h2 class="text-white text-xl font-semibold mb-4">Configuración de la Sala</h2>
-
-					<div class="space-y-4">
-						<div class="flex justify-between">
-							<span class="text-white">Jugadores:</span>
-							<span class="text-orange-400 font-semibold">{roomData.players.length}/{roomData.maxPlayers}</span>
-						</div>
-
-						<div class="flex justify-between">
-							<span class="text-white">Vidas:</span>
-							<span class="text-orange-400 font-semibold">{roomData.lives}</span>
-						</div>
-
-						<div class="flex justify-between">
-							<span class="text-white">Dificultad:</span>
-							<span class="text-orange-400 font-semibold">{roomData.difficulty}</span>
-						</div>
-
-						<div class="flex justify-between">
-							<span class="text-white">Modo:</span>
-							<span class="text-orange-400 font-semibold">{roomData.gameMode}</span>
-						</div>
-
-						<div class="flex justify-between">
-							<span class="text-white">Estado:</span>
-							<span class="text-orange-400 font-semibold capitalize">{roomData.status}</span>
-						</div>
-					</div>
-				</div>
-
-				<!-- Lista de jugadores -->
-				<div class="bg-blue-700/50 rounded-xl p-6">
-					<h2 class="text-white text-xl font-semibold mb-4">Jugadores ({roomData.players.length})</h2>
-
-					<div class="space-y-2">
-						{#each roomData.players as player, index}
-							<div class="flex items-center justify-between bg-blue-600/50 rounded-lg p-3">
-								<div class="flex items-center space-x-3">
-									<div class="w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center text-white text-xs">
-										{index + 1}
-									</div>
-									<span class="text-white font-medium">{player}</span>
-									{#if player === roomData.host}
-										<span class="text-yellow-400 text-xs font-semibold">(Host)</span>
-									{/if}
-								</div>
-							</div>
-						{/each}
-					</div>
-				</div>
+		</div>
+	{:else if gameStatus === 'playing'}
+		<!-- Juego en curso -->
+		<div class="container mx-auto max-w-7xl px-4">
+			<div class="mb-4 text-center">
+				<h1 class="font-display-header text-3xl text-orange-400">
+					Ronda {$gameStore.currentRound}
+				</h1>
 			</div>
 
-			<!-- Botones de acción -->
-			<div class="flex justify-center space-x-4">
-				{#if isHost && canStart}
+			<div class="grid gap-6 lg:grid-cols-3">
+				<!-- Columna izquierda: Jugadores -->
+				<div class="space-y-6">
+					<PlayersList />
+					
 					<button
-						on:click={startGame}
-						class="px-8 py-4 bg-orange-500 text-white text-xl font-bold rounded-xl hover:bg-orange-600 transition-colors"
+						on:click={leaveRoom}
+						class="w-full rounded-lg bg-red-500 px-4 py-2 font-medium text-white transition-colors hover:bg-red-600"
 					>
-						INICIAR JUEGO
+						Abandonar
 					</button>
-				{:else if isHost}
-					<button
-						disabled
-						class="px-8 py-4 bg-gray-500 text-white text-xl font-bold rounded-xl cursor-not-allowed"
-					>
-						Esperando más jugadores...
-					</button>
-				{:else}
-					<button
-						disabled
-						class="px-8 py-4 bg-gray-500 text-white text-xl font-bold rounded-xl cursor-not-allowed"
-					>
-						Esperando al host...
-					</button>
-				{/if}
+				</div>
 
-				<button
-					on:click={leaveRoom}
-					class="px-6 py-4 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium"
-				>
-					Abandonar Sala
-				</button>
+				<!-- Columna central: Juego -->
+				<div class="space-y-6">
+					<Timer />
+					<PromptDisplay />
+					<WordInput />
+				</div>
+
+				<!-- Columna derecha: Chat -->
+				<div class="h-[600px]">
+					<Chat />
+				</div>
 			</div>
 		</div>
 	{/if}
+
+	<!-- Modal de fin de juego -->
+	<GameOver />
 </div>

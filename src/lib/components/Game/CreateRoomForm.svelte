@@ -25,14 +25,36 @@
 
 			if (response && response.room_code) {
 				// Éxito: Redirigir a la sala creada
-				await goto(`/sala/${response.room_code}`);
+				await goto(`/room/${response.room_code}`);
 			} else {
 				throw new Error('No se recibió un código de sala.');
 			}
 		} catch (e: any) {
 			console.error('Error en createRoom:', e);
-			// El error puede venir del backend (e.g., e.response.data.error)
-			error = e.response?.data?.error || e.message || 'Error al crear la sala.';
+			
+			// Manejo específico para el error "Ya te encuentras en una sala"
+			if (e.error === 'Ya te encuentras en una sala.') {
+				// Intentar obtener el código de la sala actual desde las cookies
+				const currentRoomCode = document.cookie
+					.split('; ')
+					.find(row => row.startsWith('ROOM='))
+					?.split('=')[1];
+				
+				if (currentRoomCode) {
+					error = `Ya estás en la sala ${currentRoomCode}.`;
+					// Ofrecer redirigir a la sala actual
+					setTimeout(() => {
+						if (confirm(`Ya estás en la sala ${currentRoomCode}. ¿Deseas ir a esa sala en lugar de crear una nueva?`)) {
+							goto(`/room/${currentRoomCode}`);
+						}
+					}, 100);
+				} else {
+					error = 'Ya estás en una sala. Intenta recargar la página o cerrar sesión y volver a entrar.';
+				}
+			} else {
+				// El error puede venir del backend (e.g., e.response.data.error)
+				error = e.response?.data?.error || e.error || e.message || 'Error al crear la sala.';
+			}
 		} finally {
 			isLoading = false;
 		}
@@ -149,7 +171,7 @@
 			<button
 				type="submit"
 				disabled={isLoading}
-				class="w-full max-w-xs rounded-lg bg-orange-500 px-6 py-3 font-medium text-white transition-colors hover:bg-orange-600 disabled:animate-pulse disabled:cursor-not-allowed disabled:bg-orange-800 disabled:opacity-70"
+				class="w-full max-w-xs cursor-pointer rounded-lg bg-orange-500 px-6 py-3 font-medium text-white transition-colors hover:bg-orange-600 disabled:animate-pulse disabled:cursor-not-allowed disabled:bg-orange-800 disabled:opacity-70"
 			>
 				{isLoading ? 'Creando...' : 'Crear Sala'}
 			</button>

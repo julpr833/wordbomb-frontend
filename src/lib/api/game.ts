@@ -59,10 +59,10 @@ export const gameApi = {
 		});
 	},
 
-	joinRoom: async (roomCode: string, username: string): Promise<JoinRoomResponse> => {
+	joinRoom: async (roomCode: string): Promise<JoinRoomResponse> => {
 		return api.post<JoinRoomResponse>(
 			'/game/join-room',
-			{ roomCode, username },
+			{ room_code: roomCode },
 			{
 				useFormData: true
 			}
